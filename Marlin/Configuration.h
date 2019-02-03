@@ -81,7 +81,7 @@
 // User-specified version info of this build to display in [Pronterface, etc] terminal window during
 // startup. Implementation of an idea by Prof Braino to inform user that any changes made to this
 // build by the user have been successfully uploaded into firmware.
-#define STRING_CONFIG_H_AUTHOR "(none, default config)" // Who made the changes.
+#define STRING_CONFIG_H_AUTHOR "philpem" // Who made the changes.
 #define SHOW_BOOTSCREEN
 #define STRING_SPLASH_LINE1 SHORT_BUILD_VERSION // will be shown during bootup in line 1
 #define STRING_SPLASH_LINE2 WEBSITE_URL         // will be shown during bootup in line 2
@@ -131,7 +131,7 @@
 // The following define selects which electronics board you have.
 // Please choose the name from boards.h that matches your setup
 #ifndef MOTHERBOARD
-  #define MOTHERBOARD BOARD_RAMPS_14_EFB
+  #define MOTHERBOARD BOARD_MKS_GEN_13
 #endif
 
 // Optional custom name for your RepStrap or other custom machine
@@ -149,7 +149,7 @@
 #define EXTRUDERS 1
 
 // Generally expected filament diameter (1.75, 2.85, 3.0, ...). Used for Volumetric, Filament Width Sensor, etc.
-#define DEFAULT_NOMINAL_FILAMENT_DIA 3.0
+#define DEFAULT_NOMINAL_FILAMENT_DIA 1.75
 
 // For Cyclops or any "multi-extruder" that shares a single nozzle.
 //#define SINGLENOZZLE
@@ -310,12 +310,12 @@
  *
  * :{ '0': "Not used", '1':"100k / 4.7k - EPCOS", '2':"200k / 4.7k - ATC Semitec 204GT-2", '3':"Mendel-parts / 4.7k", '4':"10k !! do not use for a hotend. Bad resolution at high temp. !!", '5':"100K / 4.7k - ATC Semitec 104GT-2 (Used in ParCan & J-Head)", '501':"100K Zonestar (Tronxy X3A)", '6':"100k / 4.7k EPCOS - Not as accurate as Table 1", '7':"100k / 4.7k Honeywell 135-104LAG-J01", '8':"100k / 4.7k 0603 SMD Vishay NTCS0603E3104FXT", '9':"100k / 4.7k GE Sensing AL03006-58.2K-97-G1", '10':"100k / 4.7k RS 198-961", '11':"100k / 4.7k beta 3950 1%", '12':"100k / 4.7k 0603 SMD Vishay NTCS0603E3104FXT (calibrated for Makibox hot bed)", '13':"100k Hisens 3950  1% up to 300°C for hotend 'Simple ONE ' & hotend 'All In ONE'", '20':"PT100 (Ultimainboard V2.x)", '51':"100k / 1k - EPCOS", '52':"200k / 1k - ATC Semitec 204GT-2", '55':"100k / 1k - ATC Semitec 104GT-2 (Used in ParCan & J-Head)", '60':"100k Maker's Tool Works Kapton Bed Thermistor beta=3950", '66':"Dyze Design 4.7M High Temperature thermistor", '70':"the 100K thermistor found in the bq Hephestos 2", '71':"100k / 4.7k Honeywell 135-104LAF-J01", '147':"Pt100 / 4.7k", '1047':"Pt1000 / 4.7k", '110':"Pt100 / 1k (non-standard)", '1010':"Pt1000 / 1k (non standard)", '-4':"Thermocouple + AD8495", '-3':"Thermocouple + MAX31855 (only for sensor 0)", '-2':"Thermocouple + MAX6675 (only for sensor 0)", '-1':"Thermocouple + AD595",'998':"Dummy 1", '999':"Dummy 2" }
  */
-#define TEMP_SENSOR_0 1
+#define TEMP_SENSOR_0 5     /* PHILPEM: E3Dv6 Extruder thermistor */
 #define TEMP_SENSOR_1 0
 #define TEMP_SENSOR_2 0
 #define TEMP_SENSOR_3 0
 #define TEMP_SENSOR_4 0
-#define TEMP_SENSOR_BED 0
+#define TEMP_SENSOR_BED 75  /* PHILPEM: Bed temperature sensor was 80, the QU-BD profile */
 #define TEMP_SENSOR_CHAMBER 0
 
 // Dummy thermistor constant temperature readings, for use with 998 and 999
@@ -350,7 +350,7 @@
 // When temperature exceeds max temp, your heater will be switched off.
 // This feature exists to protect your hotend from overheating accidentally, but *NOT* from thermistor short/failure!
 // You should use MINTEMP for thermistor short/failure protection.
-#define HEATER_0_MAXTEMP 275
+#define HEATER_0_MAXTEMP 285    /* PHILPEM E3D v6 needs taking up to 285C for nozzle tightening */
 #define HEATER_1_MAXTEMP 275
 #define HEATER_2_MAXTEMP 275
 #define HEATER_3_MAXTEMP 275
@@ -380,9 +380,9 @@
   // If you are using a pre-configured hotend then you can use one of the value sets by uncommenting it
 
   // Ultimaker
-  #define DEFAULT_Kp 22.2
-  #define DEFAULT_Ki 1.08
-  #define DEFAULT_Kd 114
+  //#define DEFAULT_Kp 22.2
+  //#define DEFAULT_Ki 1.08
+  //#define DEFAULT_Kd 114
 
   // MakerGear
   //#define DEFAULT_Kp 7.0
@@ -393,6 +393,11 @@
   //#define DEFAULT_Kp 63.0
   //#define DEFAULT_Ki 2.25
   //#define DEFAULT_Kd 440
+
+  // PHILPEM: E3D V6
+  #define DEFAULT_Kp 63.55
+  #define DEFAULT_Ki 9.58
+  #define DEFAULT_Kd 105.43
 
 #endif // PIDTEMP
 
@@ -413,7 +418,7 @@
  * heater. If your configuration is significantly different than this and you don't understand
  * the issues involved, don't use bed PID until someone else verifies that your hardware works.
  */
-//#define PIDTEMPBED
+#define PIDTEMPBED    // PHILPEM: Enable bed PID, make bed temperature more stable. Can do this as we have a silicone heated bed.
 
 //#define BED_LIMIT_SWITCHING
 
@@ -507,11 +512,11 @@
 // Specify here all the endstop connectors that are connected to any endstop or probe.
 // Almost all printers will be using one per axis. Probes will use one or more of the
 // extra connectors. Leave undefined any used for non-endstop and non-probe purposes.
-#define USE_XMIN_PLUG
-#define USE_YMIN_PLUG
+//#define USE_XMIN_PLUG   /* PHILPEM Solidoodle doesn't have an XMIN sensor */
+//#define USE_YMIN_PLUG   /* PHILPEM Solidoodle doesn't have a  YMIN sensor */
 #define USE_ZMIN_PLUG
-//#define USE_XMAX_PLUG
-//#define USE_YMAX_PLUG
+#define USE_XMAX_PLUG     /* PHILPEM Solidoodle has a XMAX limit switch */
+#define USE_YMAX_PLUG     /* PHILPEM Solidoodle has a YMAX limit switch */
 //#define USE_ZMAX_PLUG
 
 // Enable pullup for all endstops to prevent a floating state
@@ -550,17 +555,20 @@
  *          TMC5130, TMC5130_STANDALONE
  * :['A4988', 'DRV8825', 'LV8729', 'L6470', 'TB6560', 'TB6600', 'TMC2100', 'TMC2130', 'TMC2130_STANDALONE', 'TMC2208', 'TMC2208_STANDALONE', 'TMC26X', 'TMC26X_STANDALONE', 'TMC2660', 'TMC2660_STANDALONE', 'TMC5130', 'TMC5130_STANDALONE']
  */
-//#define X_DRIVER_TYPE  A4988
-//#define Y_DRIVER_TYPE  A4988
-//#define Z_DRIVER_TYPE  A4988
-//#define X2_DRIVER_TYPE A4988
-//#define Y2_DRIVER_TYPE A4988
-//#define Z2_DRIVER_TYPE A4988
-//#define E0_DRIVER_TYPE A4988
-//#define E1_DRIVER_TYPE A4988
-//#define E2_DRIVER_TYPE A4988
-//#define E3_DRIVER_TYPE A4988
-//#define E4_DRIVER_TYPE A4988
+//
+// PHILPEM Running DRV8825 drivers on all axes
+//
+#define X_DRIVER_TYPE  DRV8825
+#define Y_DRIVER_TYPE  DRV8825
+#define Z_DRIVER_TYPE  DRV8825
+//#define X2_DRIVER_TYPE DRV8825
+//#define Y2_DRIVER_TYPE DRV8825
+//#define Z2_DRIVER_TYPE DRV8825
+#define E0_DRIVER_TYPE DRV8825
+#define E1_DRIVER_TYPE DRV8825
+//#define E2_DRIVER_TYPE DRV8825
+//#define E3_DRIVER_TYPE DRV8825
+//#define E4_DRIVER_TYPE DRV8825
 
 // Enable this feature if all enabled endstop pins are interrupt-capable.
 // This will remove the need to poll the interrupt pins, saving many CPU cycles.
@@ -608,14 +616,54 @@
  * Override with M92
  *                                      X, Y, Z, E0 [, E1[, E2[, E3[, E4]]]]
  */
-#define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 4000, 500 }
+// PHILPEM -- defaults for 1/32 microstep. Cribbed from the Printrboard.
+//#define DEFAULT_AXIS_STEPS_PER_UNIT   { 160, 160, 4535.44, 333.34 }   // PHILPEM: X/Y 160 s/mm, Z 4535.44 s/mm (Imperial Z-shaft), E1 333.34 s/mm (HobbGoblin)
+
+// PHILPEM -- Solidoodle motor specs
+//
+// --- Replacement motors (currently installed) ---
+// X Axis:    35SHD0102-20B   NEMA-14   1.8deg (200step)  4.35V 0.75A   150mN.m
+// Y Axis:    42SHD0404-22    NEMA-17   1.8deg (200step)  3V    1.5A    480mN.m
+// Extruder:  As Y
+// Z Axis: (original)
+//    awaiting install: Precision Maker MTR-N17-48 NEMA-17, 1.8deg, 3.4V 1.7A, 520mN.m
+//
+// --- Original Solidoodle motors ---
+// Y,Z,E0 motors are NEMA-17, SM42HT33-1334A (2.8V, 1.33A/ph, 30oz-in, 1.8-degree = 200 steps)
+// X motor        is NEMA-14, SM35HT36-1004A (2.7V, 1A/ph,    19oz-in, 1.8-degree = 200 steps)
+
+// PHILPEM Calculate default XYZ scale at compile time
+#define MOTOR_STEPS(MOTORSTEPS, MICROSTEPS)  (MOTORSTEPS * MICROSTEPS)
+
+#define PULLEY_PITCH 2.0      /* GT2 2mm pitch belt */
+#define PULLEY_TEETH 20.0     /* 20-tooth GT2 pulleys */
+#define Z_ROD_PITCH (25.4/18.0)   /* Stock -- 5/16-18 Imperial threaded rod = 18tpi */
+
+#define WADE_PULLEY_TEETH 1.0   /* Stock direct-drive extruder */
+#define WADE_GEAR_TEETH 1.0     /* Stock direct-drive extruder */
+#define HOBBED_BOLT_DIAM 6.5    /* E3D HobbGoblin, effective diameter 6.5mm */
+
+// PHILPEM: Run X/Y at 16 microsteps for more torque
+#define X_STEPS (MOTOR_STEPS(200.0, 16.0) / (PULLEY_PITCH * PULLEY_TEETH))
+#define Y_STEPS (MOTOR_STEPS(200.0, 16.0) / (PULLEY_PITCH * PULLEY_TEETH))
+
+// PHILPEM: Run Z at 32 microsteps for more resolution and to reduce "Solidoodle moire"
+#define Z_STEPS (MOTOR_STEPS(200.0, 32.0) / Z_ROD_PITCH)
+
+// PHILPEM: Extruder settings. Run E at 32 microsteps for more filament feed resolution.
+#define WADE_GEAR_RATIO (WADE_GEAR_TEETH / WADE_PULLEY_TEETH)
+#define HOBBED_BOLD_CIRC (M_PI * HOBBED_BOLT_DIAM)
+#define WADE_E_STEPS (MOTOR_STEPS(200.0, 32.0) * WADE_GEAR_RATIO / HOBBED_BOLD_CIRC)
+
+#define DEFAULT_AXIS_STEPS_PER_UNIT   { X_STEPS, Y_STEPS, Z_STEPS, WADE_E_STEPS }
+
 
 /**
  * Default Max Feed Rate (mm/s)
  * Override with M203
  *                                      X, Y, Z, E0 [, E1[, E2[, E3[, E4]]]]
  */
-#define DEFAULT_MAX_FEEDRATE          { 300, 300, 5, 25 }
+#define DEFAULT_MAX_FEEDRATE          { 500, 500, 5, 25 }
 
 /**
  * Default Max Acceleration (change/s) change = mm/s
@@ -848,9 +896,9 @@
 // @section machine
 
 // Invert the stepper direction. Change (or reverse the motor connector) if an axis goes the wrong way.
-#define INVERT_X_DIR false
-#define INVERT_Y_DIR true
-#define INVERT_Z_DIR false
+#define INVERT_X_DIR false  //PHILPEM
+#define INVERT_Y_DIR false  //PHILPEM
+#define INVERT_Z_DIR false  //PHILPEM
 
 // @section extruder
 
@@ -872,15 +920,15 @@
 
 // Direction of endstops when homing; 1=MAX, -1=MIN
 // :[-1,1]
-#define X_HOME_DIR -1
-#define Y_HOME_DIR -1
+#define X_HOME_DIR 1    // PHILPEM Solidoodle has endstops on X-MAX, Y-MAX and Z-MIN
+#define Y_HOME_DIR 1    // PHILPEM
 #define Z_HOME_DIR -1
 
 // @section machine
 
 // The size of the print bed
-#define X_BED_SIZE 200
-#define Y_BED_SIZE 200
+#define X_BED_SIZE 130      /* PHILPEM: Solidoodle physical area is a bit larger but the Lawsy carriages and part fan reduce the movement area */
+#define Y_BED_SIZE 130      /* PHILPEM: Solidoodle physical area is a bit larger but the Lawsy carriages and part fan reduce the movement area */
 
 // Travel limits (mm) after homing, corresponding to endstop positions.
 #define X_MIN_POS 0
@@ -888,7 +936,7 @@
 #define Z_MIN_POS 0
 #define X_MAX_POS X_BED_SIZE
 #define Y_MAX_POS Y_BED_SIZE
-#define Z_MAX_POS 200
+#define Z_MAX_POS 150       /* PHILPEM: Solidoodle standard build area is 6" x 6" x 6", so max Z should be around 150mm -- though the E3Dv6 and part fan reduce this a little. */
 
 /**
  * Software Endstops
@@ -1223,7 +1271,7 @@
 // M501 - reads parameters from EEPROM (if you need reset them after you changed them temporarily).
 // M502 - reverts to the default "factory settings".  You still need to store them in EEPROM afterwards if you want to.
 //
-//#define EEPROM_SETTINGS // Enable for M500 and M501 commands
+#define EEPROM_SETTINGS // Enable for M500 and M501 commands      (PHILPEM - enabled this)
 //#define DISABLE_M503    // Saves ~2700 bytes of PROGMEM. Disable for release!
 #define EEPROM_CHITCHAT   // Give feedback on EEPROM commands. Disable to save PROGMEM.
 
@@ -1804,7 +1852,7 @@
 // @section extras
 
 // Increase the FAN PWM frequency. Removes the PWM noise but increases heating in the FET/Arduino
-//#define FAST_PWM_FAN
+#define FAST_PWM_FAN
 
 // Use software PWM to drive the fan, as for the heaters. This uses a very low frequency
 // which is not as annoying as with the hardware PWM. On the other hand, if this frequency
