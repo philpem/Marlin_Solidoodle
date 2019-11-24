@@ -927,8 +927,9 @@
 // @section machine
 
 // The size of the print bed
-#define X_BED_SIZE 130      /* PHILPEM: Solidoodle physical area is a bit larger but the Lawsy carriages and part fan reduce the movement area */
+#define X_BED_SIZE 130      /* PHILPEM: Solidoodle physical area is a bit larger but we lose some of the X-axis to the cable chain and belt guard */
 #define Y_BED_SIZE 130      /* PHILPEM: Solidoodle physical area is a bit larger but the Lawsy carriages and part fan reduce the movement area */
+    /* Y140 may be possible if the bolts holding the front belt supports are shortened -- they impinge into the print area */
 
 // Travel limits (mm) after homing, corresponding to endstop positions.
 #define X_MIN_POS 0
